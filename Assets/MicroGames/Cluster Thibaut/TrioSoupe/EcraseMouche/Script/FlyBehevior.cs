@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrioName
+namespace Soupe
 {
-    namespace MiniGameName
+    namespace EcraseMouche
     {
         public class FlyBehevior : TimedBehaviour
         {

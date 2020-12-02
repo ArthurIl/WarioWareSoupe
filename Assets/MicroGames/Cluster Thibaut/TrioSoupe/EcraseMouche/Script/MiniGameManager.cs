@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Sauce
+namespace Soupe
 {
     namespace EcraseMouche
     {
@@ -17,18 +17,28 @@ namespace Sauce
             private List<GameObject> spawnPoint = new List<GameObject>();
             [SerializeField]
             private GameObject jamStain;
+            [SerializeField]
+            private GameObject flyBug;
+            [SerializeField]
+            private GameObject flyHierarchy;
+            [SerializeField]
+            private GameObject swatter;
+            [SerializeField]
+            private Transform posFly;
 
             private int tempIndJam;
-           // private int numberOfJam;
+            private int numberOfJam;
 
             public override void Start()
             {
                 base.Start(); //Do not erase this line!
+                numberOfJam = 4;
                 //place jam
-                placeJam();
+                PlaceJam();
                 //place fly on the left jam
-                placeFly();
+                PlaceFly();
                 //place swatter on a jam but not the one with the fly
+                PlaceSwatter();
 
             }
 
@@ -45,7 +55,7 @@ namespace Sauce
 
             }
 
-            public void placeJam()
+            public void PlaceJam()
             {
                 //foreach (GameObject spawnpoint in spawnPoint)
                 //{
@@ -60,17 +70,42 @@ namespace Sauce
                 //}
 
                 List <GameObject> jamBis = new List<GameObject>(spawnPoint);
-                for(int i=0; i<4; i++)
+                for(int i=0; i<numberOfJam; i++)
                 {
                     tempIndJam = Random.Range(0, jamBis.Count);
-                    Instantiate(jamStain, jamBis[tempIndJam].transform);
+                    GameObject newStain = Instantiate(jamStain, jamBis[tempIndJam].transform);
                     jamBis.Remove(jamBis[tempIndJam]);
+                    jam.Add(newStain); //add to the jam list the stain
                 }
             }
 
-            public void placeFly()
+            public void PlaceFly()
             {
+                foreach(GameObject jamPoint in spawnPoint)
+                {
+                    if (jamPoint.transform.childCount > 0) //attention si les points on d'autres enfants update le 0
+                    {
+                        GameObject temp = Instantiate(flyBug, jamPoint.transform);
+                        posFly = jamPoint.transform;
+                        temp.transform.parent = flyHierarchy.transform;
+                        break;
+                    }
+                }
+            }
 
+            public void PlaceSwatter()
+            {
+                int temp = Random.Range(0, numberOfJam);
+
+                if (jam[temp].transform.position == posFly.position)
+                {
+                    Debug.Log("let's go");
+                    PlaceSwatter(); //NICO DEBUG
+                }
+                else
+                {
+                    Instantiate(swatter, jam[temp].transform);
+                }
             }
         }
     }
