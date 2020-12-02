@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrioSauce
+namespace TrioSoupe
 {
     namespace ServiceRapide
     {
@@ -31,7 +31,7 @@ namespace TrioSauce
 
             public int memorizationTime;
 
-            bool isMemorizationOver;
+            bool memorizationOver;
 
             bool playerChosedMeat;
             bool playerChosedBread;
@@ -39,9 +39,21 @@ namespace TrioSauce
 
             bool loose;
             bool win;
+            bool launchPlaceRandomIngredient;
+
+            public float timeBetweenSteps;
+
+            bool canChoose;
+
+            GameObject[] ingredientChosingPhase;
+
             void Start()
             {
-                isMemorizationOver = false;
+                canChoose = true;
+                loose = false;
+                ingredientChosingPhase = new GameObject[4];
+                launchPlaceRandomIngredient = true;
+                memorizationOver = false;
                 ingredientChosedPerPos = new List<int>();
                 chefMeatInt = Random.Range(0, 4);
                 chefBreadInt = Random.Range(0, 4);
@@ -53,132 +65,164 @@ namespace TrioSauce
 
             void Update()
             {
-                if (isMemorizationOver == false)
+                if (memorizationOver == false)
                 {
-                    StartCoroutine("MemorizationOver");
-                    isMemorizationOver = true;
+                    StartCoroutine("MemorizationPhase");
+                    memorizationOver = true;
                 }
-                if (playerChosedMeat == false && isMemorizationOver != false)
+                if (playerChosedBread == false && memorizationOver != false)
                 {
-                    PlayerChose(chefMeatInt, ref playerChosedMeat);
-                }
-                if(playerChosedBread == false && playerChosedMeat == true)
-                {
-                    RandomPlaceIngredient(bread);
                     PlayerChose(chefBreadInt, ref playerChosedBread);
                 }
-                if (playerChosedVegetable == false && playerChosedBread == true)
+                if (playerChosedMeat == false && playerChosedBread == true)
+                {
+                    RandomPlaceIngredient(meat);
+                    PlayerChose(chefMeatInt, ref playerChosedMeat);
+                }
+                if (playerChosedVegetable == false && playerChosedMeat == true)
                 {
                     RandomPlaceIngredient(vegetable);
                     PlayerChose(chefVegetableInt, ref playerChosedVegetable);
                 }
+
             }
-            IEnumerator MemorizationOver()
+            IEnumerator MemorizationPhase()
             {
                 yield return new WaitForSeconds(memorizationTime);
                 Destroy(chefBread);
                 Destroy(chefMeat);
                 Destroy(chefVegetable);
-                RandomPlaceIngredient(meat);
-
+                RandomPlaceIngredient(bread);
             }
 
             void RandomPlaceIngredient(GameObject[] ingredient)
             {
-
-                for (int i = 0; i < 4; i++)
+                if(launchPlaceRandomIngredient == true)
                 {
-                    bool isIngredientAlreadyIn;
-                    int randomIngredient;
-                    if (i == 0)
+                    for (int i = 0; i < 4; i++)
                     {
-                        randomIngredient = Random.Range(0, 4);
-                        Instantiate(ingredient[randomIngredient], ingredientScreenPositions[i], Quaternion.identity);
-                        ingredientChosedPerPos.Add(randomIngredient);
-                    }
-                    else
-                    {
-                        do
+                        bool isIngredientAlreadyIn;
+                        int randomIngredient;
+                        if (i == 0)
                         {
-                            isIngredientAlreadyIn = false;
                             randomIngredient = Random.Range(0, 4);
-                            foreach (int ingredientChosed in ingredientChosedPerPos)
+                            ingredientChosingPhase[i] = Instantiate(ingredient[randomIngredient], ingredientScreenPositions[i], Quaternion.identity);
+                            ingredientChosedPerPos.Add(randomIngredient);
+                        }
+                        else
+                        {
+                            do
                             {
-                                if (randomIngredient == ingredientChosed)
+                                isIngredientAlreadyIn = false;
+                                randomIngredient = Random.Range(0, 4);
+                                foreach (int ingredientChosed in ingredientChosedPerPos)
                                 {
-                                    isIngredientAlreadyIn = true;
+                                    if (randomIngredient == ingredientChosed)
+                                    {
+                                        isIngredientAlreadyIn = true;
+                                    }
                                 }
-                            }
 
-                        } while (isIngredientAlreadyIn == true);
+                            } while (isIngredientAlreadyIn == true);
 
-                        Instantiate(ingredient[randomIngredient], ingredientScreenPositions[i], Quaternion.identity);
-                        ingredientChosedPerPos.Add(randomIngredient);
+                            ingredientChosingPhase[i] =  Instantiate(ingredient[randomIngredient], ingredientScreenPositions[i], Quaternion.identity);
+                            ingredientChosedPerPos.Add(randomIngredient);
+                            
+                        }
                     }
-
-
                 }
+                launchPlaceRandomIngredient = false;
+                
             }
 
             void PlayerChose(int checkedChefIngredient, ref bool checkedPlayerIngredient)
             {
-                if (Input.GetButtonDown("A_Button"))
+
+                if (canChoose == true)
                 {
-                    if (ingredientChosedPerPos[0] == checkedChefIngredient)
+                    if (Input.GetButtonDown("A_Button"))
                     {
-                        checkedPlayerIngredient = true;
-                        Debug.Log("playerChosedMeat " + playerChosedMeat);
+                        StartCoroutine(StartChooseCD());
+                        if (ingredientChosedPerPos[0] == checkedChefIngredient)
+                        {
+                            checkedPlayerIngredient = true;
+                            ingredientChosedPerPos.Clear();
+                            DestroyChosedIngredients();
+                            launchPlaceRandomIngredient = true;
+                        }
+                        else
+                        {
+                            loose = true;
+                            Debug.Log("loose A" + loose);
+                        }
                         ingredientChosedPerPos.Clear();
                     }
-                    else
+                    if (Input.GetButtonDown("B_Button"))
                     {
-                        loose = true;
-                        Debug.Log("loose " + loose);
+                        StartCoroutine(StartChooseCD());
+                        if (ingredientChosedPerPos[1] == checkedChefIngredient)
+                        {
+                            checkedPlayerIngredient = true;
+                            ingredientChosedPerPos.Clear();
+                            DestroyChosedIngredients();
+                            launchPlaceRandomIngredient = true;
+                        }
+                        else
+                        {
+                            loose = true;
+                            Debug.Log("loose B" + loose);
+                        }
+
+                    }
+                    if (Input.GetButtonDown("Y_Button"))
+                    {
+                        StartCoroutine(StartChooseCD());
+                        if (ingredientChosedPerPos[2] == checkedChefIngredient)
+                        {
+                            checkedPlayerIngredient = true;
+                            ingredientChosedPerPos.Clear();
+                            DestroyChosedIngredients();
+                            launchPlaceRandomIngredient = true;
+                        }
+                        else
+                        {
+                            loose = true;
+                            Debug.Log("loose Y" + loose);
+                        }
+
+                    }
+                    if (Input.GetButtonDown("X_Button"))
+                    {
+                        StartCoroutine(StartChooseCD());
+                        if (ingredientChosedPerPos[3] == checkedChefIngredient)
+                        {
+                            checkedPlayerIngredient = true;
+                            ingredientChosedPerPos.Clear();
+                            DestroyChosedIngredients();
+                            launchPlaceRandomIngredient = true;
+                        }
+                        else
+                        {
+                            loose = true;
+                            Debug.Log("loose X" + loose);
+                        }
+
                     }
                 }
-                if (Input.GetButtonDown("B_Button"))
+            }
+            void DestroyChosedIngredients()
+            {
+                foreach (GameObject ingredients in ingredientChosingPhase)
                 {
-                    if (ingredientChosedPerPos[1] == checkedChefIngredient)
-                    {
-                        checkedPlayerIngredient = true;
-                        Debug.Log("playerChosedMeat " + playerChosedMeat);
-                        ingredientChosedPerPos.Clear();
-                    }
-                    else
-                    {
-                        loose = true;
-                        Debug.Log("loose " + loose);
-                    }
+                    Destroy(ingredients);
                 }
-                if (Input.GetButtonDown("Y_Button"))
-                {
-                    if (ingredientChosedPerPos[2] == checkedChefIngredient)
-                    {
-                        checkedPlayerIngredient = true;
-                        Debug.Log("playerChosedMeat " + playerChosedMeat);
-                        ingredientChosedPerPos.Clear();
-                    }
-                    else
-                    {
-                        loose = true;
-                        Debug.Log("loose " + loose);
-                    }
-                }
-                if (Input.GetButtonDown("X_Button"))
-                {
-                    if (ingredientChosedPerPos[3] == checkedChefIngredient)
-                    {
-                        checkedPlayerIngredient = true;
-                        Debug.Log("playerChosedMeat " + playerChosedMeat);
-                        ingredientChosedPerPos.Clear();
-                    }
-                    else
-                    {
-                        loose = true;
-                        Debug.Log("loose " + loose);
-                    }
-                }
-                
+            }
+
+            IEnumerator StartChooseCD()
+            {
+                canChoose = false;
+                yield return new WaitForSeconds(timeBetweenSteps);
+                canChoose = true;
             }
         }
 

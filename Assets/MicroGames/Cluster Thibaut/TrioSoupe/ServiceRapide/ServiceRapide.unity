@@ -282,13 +282,14 @@ MonoBehaviour:
   - {fileID: 8121029227289399852, guid: b0c3061c891d18948860d8ad1ba9d92e, type: 3}
   ingredientScreenPositions:
   - {x: 0, y: -3, z: 0}
-  - {x: 3, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: -3, y: 0, z: 0}
+  - {x: 4, y: 0, z: 0}
+  - {x: 0, y: 3, z: 0}
+  - {x: -4, y: 0, z: 0}
   chefBreadPos: {x: 0, y: 3, z: 0}
   chefMeatPos: {x: 0, y: 0, z: 0}
   chefVegetablePos: {x: 0, y: -3, z: 0}
   memorizationTime: 2
+  timeBetweenSteps: 0.2
 --- !u!4 &1481133480
 Transform:
   m_ObjectHideFlags: 0
