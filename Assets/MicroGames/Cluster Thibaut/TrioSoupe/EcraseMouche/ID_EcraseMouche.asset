@@ -17,7 +17,9 @@ MonoBehaviour:
   haptiqueChal: 0
   inputChal: 0
   indexEnum: 1
+  verbe: Ecrase B
   microGameScene:
     sceneAsset: {fileID: 102900000, guid: aa16d15e49f3acc45a5544741765399e, type: 3}
     required: 0
     buildIndex: 2
+  currentDifficulty: 0
