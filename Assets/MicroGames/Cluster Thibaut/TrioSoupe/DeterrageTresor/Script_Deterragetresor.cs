@@ -53,22 +53,22 @@ namespace Soupe
 
             private void Update()
             {
-                if (Input.GetButtonDown("A_Button") && inputCurrent[inputToPush] == "A")
+                if ((Input.GetButtonDown("A_Button") || Input.GetKeyDown(KeyCode.DownArrow)) && inputCurrent[inputToPush] == "A")
                 {
                     StartCoroutine(BottomShovelAnim());
                     NextInput();
                 }
-                if (Input.GetButtonDown("B_Button") && inputCurrent[inputToPush] == "B")
+                if ((Input.GetButtonDown("B_Button") || Input.GetKeyDown(KeyCode.RightArrow)) && inputCurrent[inputToPush] == "B")
                 {
                     StartCoroutine(RightShovelAnim());
                     NextInput();
                 }
-                if (Input.GetButtonDown("X_Button") && inputCurrent[inputToPush] == "X")
+                if ((Input.GetButtonDown("X_Button") || Input.GetKeyDown(KeyCode.LeftArrow)) && inputCurrent[inputToPush] == "X")
                 {
                     StartCoroutine(LeftShovelAnim());
                     NextInput();
                 }
-                if (Input.GetButtonDown("Y_Button") && inputCurrent[inputToPush] == "Y")
+                if ((Input.GetButtonDown("Y_Button") || Input.GetKeyDown(KeyCode.UpArrow)) && inputCurrent[inputToPush] == "Y")
                 {
                     StartCoroutine(TopShovelAnim());
                     NextInput();
