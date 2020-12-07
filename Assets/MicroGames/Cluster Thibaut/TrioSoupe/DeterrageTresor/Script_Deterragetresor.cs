@@ -9,20 +9,20 @@ namespace Soupe
     {
         public class Script_Deterragetresor : TimedBehaviour
         {
-            public Transform LeftShovel;
+            public Transform LeftShovel;    //Declatarion des pelles
             public Transform TopShovel;
             public Transform RightShovel;
             public Transform BottomShovel;
 
-            public Transform Chest;
+            public Transform Chest;         //Declaration du coffre
 
-            public int difficulty;
+            public int difficulty;          //Variable temporaire qui va gérer la difficulte
 
-            string[] inputCurrent;
-            int inputToPush;
+            string[] inputCurrent;          //Tableau dans lequel est renseinge les inputs associés aux différentes pelles (variables assignées dans SetDifficulty)
+            int inputToPush;                //Variable associee au numero de la pelle avec laquelle le joueur doit interagir
 
-            int currentInputNumber;
-            public int inputNumberToReach;
+            int currentInputNumber;         //Compte le nombre de fois que le joueur a creuse
+            public int inputNumberToReach;  //Nombre de fois que le joueur doir creuser pour reussir
 
 
             /// <summary>
@@ -33,8 +33,9 @@ namespace Soupe
             {
                 base.Start(); //Do not erase this line!
 
-                inputToPush = 0;
-                SetDifficulty();
+                inputToPush = 0;    //Le joueur devra appuier sur la pelle d'index 0
+
+                SetDifficulty();    //Set la difficule du minijeu
 
             }
 
@@ -53,10 +54,12 @@ namespace Soupe
 
             private void Update()
             {
-                if ((Input.GetButtonDown("A_Button") || Input.GetKeyDown(KeyCode.DownArrow)) && inputCurrent[inputToPush] == "A")
+                //Check si le joueur appuie sur le bon Input
+
+                if ((Input.GetButtonDown("A_Button") || Input.GetKeyDown(KeyCode.DownArrow)) && inputCurrent[inputToPush] == "A")   //
                 {
-                    StartCoroutine(BottomShovelAnim());
-                    NextInput();
+                    StartCoroutine(BottomShovelAnim()); //Lance l'animation de la pelle associée à l'input A
+                    NextInput();    //Le joueur devra appuier sur la pelle suivante
                 }
                 if ((Input.GetButtonDown("B_Button") || Input.GetKeyDown(KeyCode.RightArrow)) && inputCurrent[inputToPush] == "B")
                 {
@@ -77,20 +80,20 @@ namespace Soupe
             }
             void NextInput()
             {
-                if (inputToPush == inputCurrent.Length - 1)
+                if (inputToPush == inputCurrent.Length - 1) //Si le joueur a fait un tour de pelle
                 {
-                    inputToPush = 0;
+                    inputToPush = 0;    //Le joueur devra appuier sur la pelle d'index 0
                 }
                 else
                 {
-                    inputToPush += 1;
+                    inputToPush += 1;   //Le joueur devra appuier sur la prochaine pelle
                 }
+     
+                Chest.DOMoveY((Chest.position.y + 0.1f), 0.1f); //Fait monter le coffre
 
-                Chest.DOMoveY((Chest.position.y + 0.1f), 0.1f);
+                currentInputNumber += 1;    //Le joueur a appuié une fois de plus
 
-                currentInputNumber += 1;
-
-                if (currentInputNumber == inputNumberToReach)
+                if (currentInputNumber == inputNumberToReach)   //Check la victoire
                 {
                     //la game est gagnée
                 }
@@ -98,26 +101,40 @@ namespace Soupe
 
             void SetDifficulty()
             {
-                if (difficulty == 1)
+                if (difficulty == 1)    //Il n'y a que deux pelles
                 {
                     TopShovel.gameObject.SetActive(false);
                     LeftShovel.gameObject.SetActive(false);
 
                     inputCurrent = new string[2] { "B", "A" };
                 }
-                else if (difficulty == 2)
+                else if (difficulty == 2)   //trois pelles
                 {
                     TopShovel.gameObject.SetActive(false);
 
                     inputCurrent = new string[3] { "B", "A", "X" };
                 }
-                else if (difficulty == 3)
+                else if (difficulty == 3)   //Quatre pelles
                 {
                     inputCurrent = new string[4] { "B", "A", "X", "Y"};
                 }
+
+                /*switch(difficulty)
+                {
+                    case 1:
+                        //il se passe des trucs
+                        break;
+                    case 2:
+
+                        break;
+                    default:
+                        Debug.Log("");
+                            break;
+                }*/
             }
 
 
+            //Fonctions d'animation des pelles
             IEnumerator BottomShovelAnim()
             {
                 BottomShovel.DOMoveY(-5f, 0.2f);
