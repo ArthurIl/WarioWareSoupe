@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2cda822bfa80074f881e6fe0192b4c9, type: 3}
   m_Name: ID_ServiceRapide
   m_EditorClassIdentifier: 
-  cluster: 0
-  trio: Brigantin
+  cluster: 2
+  trio: Soupe
   haptiqueChal: 0
   inputChal: 0
-  indexEnum: 0
+  indexEnum: 1
+  verbe: Memorise
   microGameScene:
     sceneAsset: {fileID: 102900000, guid: efb7f580f4b53a247ab267d11ae8beef, type: 3}
     required: 0
     buildIndex: 2
+  currentDifficulty: 0
