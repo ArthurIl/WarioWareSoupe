@@ -14,7 +14,15 @@ namespace Soupe
             public Transform RightShovel;
             public Transform BottomShovel;
 
-            public Transform Chest;         //Declaration du coffre
+            public GameObject[] InputSigns; //indication des inputs sur lesquelles appuier
+
+            public ParticleSystem[] SandFX;
+
+            Transform Chest;         //Declaration du coffre
+            public GameObject RustyChest;
+            public GameObject IronChest;
+            public GameObject GoldenChest;
+            
 
             public int difficulty;          //Variable temporaire qui va gérer la difficulte
 
@@ -24,6 +32,12 @@ namespace Soupe
             int currentInputNumber;         //Compte le nombre de fois que le joueur a creuse
             public int inputNumberToReach;  //Nombre de fois que le joueur doir creuser pour reussir
 
+            float time;                             //Variables pour la gestion de l'appartition de la signalisation d'inputs
+            public float timeBeforeInputAppears;
+            bool mustAppear;
+
+            public float yMaxChestPos = 1.50f;  //Position finale du coffre
+            float yBaseChestPos;
 
             /// <summary>
             /// Alex LEPINE
@@ -35,21 +49,26 @@ namespace Soupe
 
                 inputToPush = 0;    //Le joueur devra appuier sur la pelle d'index 0
 
-                SetDifficulty();    //Set la difficule du minijeu
+                InputSigns[inputToPush].SetActive(true);    //Active la signalisation de l'input sur lequel le joueur doit appuier
 
+                
+
+                SetDifficulty();    //Set la difficule du minijeu
             }
 
             //FixedUpdate is called on a fixed time.
             public override void FixedUpdate()
             {
                 base.FixedUpdate(); //Do not erase this line!
-
             }
 
             //TimedUpdate is called once every tick.
             public override void TimedUpdate()
             {
-
+                if (Tick == 8)
+                {
+                    //la game est loose
+                }
             }
 
             private void Update()
@@ -77,9 +96,28 @@ namespace Soupe
                     NextInput();
                 }
 
+                if (mustAppear)
+                {
+                    time += Time.deltaTime;
+
+                    if (time >= timeBeforeInputAppears)
+                    {
+                        mustAppear = false;
+                        time = 0f;
+                        InputSigns[inputToPush].SetActive(true);    //Active la signalisation de l'input sur lequel le joueur doit appuier
+                    }
+                }
             }
+
             void NextInput()
             {
+                
+
+                mustAppear = false; //Stop l'apparition de l'input
+                time = 0f;
+
+                InputSigns[inputToPush].SetActive(false); // désactive la signalisation de l'input sur lequel le joueur vient d'appuier
+
                 if (inputToPush == inputCurrent.Length - 1) //Si le joueur a fait un tour de pelle
                 {
                     inputToPush = 0;    //Le joueur devra appuier sur la pelle d'index 0
@@ -88,15 +126,19 @@ namespace Soupe
                 {
                     inputToPush += 1;   //Le joueur devra appuier sur la prochaine pelle
                 }
-     
-                Chest.DOMoveY((Chest.position.y + 0.1f), 0.1f); //Fait monter le coffre
+
+                mustAppear = true;
+
+                if(Chest.position.y < yMaxChestPos)
+                    Chest.DOMoveY((Chest.position.y + ((yMaxChestPos - yBaseChestPos) / (float)inputNumberToReach)), 0.1f); //Fait monter le coffre
 
                 currentInputNumber += 1;    //Le joueur a appuié une fois de plus
+
 
                 if (currentInputNumber == inputNumberToReach)   //Check la victoire
                 {
                     //la game est gagnée
-                }
+                }   
             }
 
             void SetDifficulty()
@@ -107,17 +149,29 @@ namespace Soupe
                     LeftShovel.gameObject.SetActive(false);
 
                     inputCurrent = new string[2] { "B", "A" };
+
+                    Chest = RustyChest.transform;
+                    RustyChest.SetActive(true);
                 }
                 else if (difficulty == 2)   //trois pelles
                 {
                     TopShovel.gameObject.SetActive(false);
 
                     inputCurrent = new string[3] { "B", "A", "X" };
+
+                    Chest = IronChest.transform;
+                    IronChest.SetActive(true);
                 }
                 else if (difficulty == 3)   //Quatre pelles
                 {
                     inputCurrent = new string[4] { "B", "A", "X", "Y"};
+
+                    Chest = GoldenChest.transform;
+                    GoldenChest.SetActive(true);
                 }
+
+                yBaseChestPos = Chest.position.y;
+
 
                 /*switch(difficulty)
                 {
@@ -133,33 +187,33 @@ namespace Soupe
                 }*/
             }
 
-
             //Fonctions d'animation des pelles
             IEnumerator BottomShovelAnim()
             {
                 BottomShovel.DOMoveY(-5f, 0.2f);
                 BottomShovel.DOScale(new Vector3(0.7f, 0.7f, 0.7f), 0.1f);
                 yield return new WaitForSeconds(0.2f);
+                SandFX[1].Play(); //joue le fx associé à la pelle
                 BottomShovel.DOMoveY(-6.98f, 0.2f);
                 BottomShovel.DOScale(new Vector3(1, 1, 1), 0.1f);
             }
-
             IEnumerator TopShovelAnim()
             {
                 
                 TopShovel.DOMoveY(3f, 0.2f);
                 TopShovel.DOScale(new Vector3(0.7f, 0.7f, 0.7f), 0.1f);
                 yield return new WaitForSeconds(0.2f);
+                SandFX[3].Play(); //joue le fx associé à la pelle
                 TopShovel.DOMoveY(6.56f, 0.2f);
                 TopShovel.DOScale(new Vector3(1, 1, 1), 0.1f);
             }
-
             IEnumerator RightShovelAnim()
             {
                 RightShovel.DORotate(new Vector3(0f, 0f, 200f), 0.1f);
                 RightShovel.DOMoveX(8f, 0.2f);
                 RightShovel.DOScale(new Vector3(0.9f, 0.9f, 0.9f), 0.1f);
                 yield return new WaitForSeconds(0.1f);
+                SandFX[0].Play(); //joue le fx associé à la pelle
                 RightShovel.DORotate(new Vector3(0f, 0f, 170f), 0.1f);
                 yield return new WaitForSeconds(0.1f);
                 RightShovel.DOScale(new Vector3(1f, 1f, 1f), 0.1f);
@@ -172,6 +226,7 @@ namespace Soupe
                 LeftShovel.DOMoveX(-8f, 0.2f);
                 LeftShovel.DOScale(new Vector3(0.9f, 0.9f, 0.9f), 0.1f);
                 yield return new WaitForSeconds(0.1f);
+                SandFX[2].Play(); //joue le fx associé à la pelle
                 LeftShovel.DORotate(new Vector3(0f, 0f, 10f), 0.1f);
                 yield return new WaitForSeconds(0.1f);
                 LeftShovel.DOScale(new Vector3(1f, 1f, 1f), 0.1f);
