@@ -32,7 +32,25 @@ namespace Soupe
             public override void Start()
             {
                 base.Start(); //Do not erase this line!
-                numberOfJam = 3;
+
+                switch (currentDifficulty)
+                {
+                    case Manager.Difficulty.EASY:
+                        numberOfJam = 3;
+                        break;
+
+                    case Manager.Difficulty.MEDIUM:
+                        numberOfJam = 4;
+                        break;
+
+                    case Manager.Difficulty.HARD:
+                        numberOfJam = 4;
+                        break;
+
+                    default:
+                        break;
+                }
+
                 //place jam
                 PlaceJam();
                 //place fly on the left jam
@@ -100,8 +118,7 @@ namespace Soupe
 
                 if (jam[temp].transform.position == posFly.position) //check if the fly is already on the jam stain
                 {
-                    Debug.Log("let's go");
-                    PlaceSwatter(); //NICO DEBUG
+                    PlaceSwatter(); //Déso Nico
                 }
                 else
                 {

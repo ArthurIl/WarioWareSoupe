@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Testing;
 
 namespace Soupe
 {
@@ -16,12 +17,17 @@ namespace Soupe
             [SerializeField]
             private List<GameObject> jamToGoPoints = new List<GameObject>();
             private int countOfJam;
+            [SerializeField]
             private bool flyCanMove;
             private float tempVelocity;
+            private int difficulty;
+            private Vector3 spriteOrientation;
+            private int timeSpeedMultiply; //used for tweaking the fly speed formula with the difficulty level (faster)
 
             public override void Start()
             {
                 base.Start(); //Do not erase this line!
+
                 flyCanMove = false;
                 countOfJam = 0;
 
@@ -33,6 +39,28 @@ namespace Soupe
                     {
                         jamToGoPoints.Remove(jamToGoPoints[i]);
                     }
+                }
+
+                switch (currentDifficulty)
+                {
+                    case Manager.Difficulty.EASY:
+                        difficulty = 1;
+                        timeSpeedMultiply = 6;
+                        break;
+
+                    case Manager.Difficulty.MEDIUM:
+                        difficulty = 2;
+                        timeSpeedMultiply = 4;
+                        break;
+
+                    case Manager.Difficulty.HARD:
+                        difficulty = 3;
+                        timeSpeedMultiply = 2;
+                        break;
+
+                    default:
+                        break;
+
                 }
 
             }
@@ -47,39 +75,157 @@ namespace Soupe
             {
                 if (flyCanMove)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position, jamToGoPoints[countOfJam].transform.position, tempVelocity*Time.deltaTime);
+                    //movement with sin 
+                    transform.position = Vector3.MoveTowards(transform.position, jamToGoPoints[countOfJam].transform.position, tempVelocity * Time.deltaTime) + transform.up * Mathf.Sin(Time.time * 20) * 0.02f;
                 }
             }
 
             //TimedUpdate is called once every tick.
             public override void TimedUpdate()
             {
-                //every 2 tic the fly move to another location during 1 tic 
 
-                if (Tick == 2)
+                if (difficulty == 1)
                 {
-                    tempVelocity = Vector3.Distance(transform.position, jamToGoPoints[countOfJam].transform.position) / (60 / bpm); //calcul the speed of the fly by dividing the distance between the fly and the next point by the time with the bpm
-                    flyCanMove = true;
-                }
-                if (Tick == 3)
-                {
-                    countOfJam++;
-                    flyCanMove = false;
+                    //every 2 tic the fly move to another location during 1 tic 
+                    switch (Tick)
+                    {
+                        case 2:
+                            FlyMovement();
+                        break;
+
+                        case 3:
+                            IncreaseFlyJamCount();
+                            break;
+                        case 5:
+                            FlyMovement();
+                            break;
+                        case 6:
+                            flyCanMove = false;
+                            break;
+
+                        default:
+                            break;
+
+                    }
                 }
 
-                if (Tick == 5)
+                if (difficulty == 2)
                 {
-                    tempVelocity = Vector3.Distance(transform.position, jamToGoPoints[countOfJam].transform.position) / (60/bpm);
-                    flyCanMove = true;
-                }
-                if (Tick == 6)
-                {
-                    countOfJam++;
-                    flyCanMove = false;
+                    //every 1 tic the fly move to another location during 1 tic 
+                    switch (Tick)
+                    {
+                        case 2:
+                            FlyMovement();
+                            break;
+
+                        case 3:
+                            IncreaseFlyJamCount();
+                            break;
+
+                        case 4:
+                            FlyMovement();
+                            break;
+
+                        case 5:
+                            IncreaseFlyJamCount();
+                            break;
+
+                        case 7:
+                            FlyMovement();
+                            break;
+
+                        case 8:
+                            flyCanMove = false;
+                            break;
+
+                        default:
+                            break;
+
+                    }
                 }
 
-                //maybe I can create a function with the tick and make something much more efficient
+                if (difficulty == 3)
+                {
+                    //every tic the fly move to another location 
+                    switch (Tick)
+                    {
+                        case 1:
+                            FlyMovementHard();
+                            break;
+
+                        case 2:
+                            FlyMovementHard();
+                            break;
+
+                        case 3:
+                            FlyMovementHard();
+                            break;
+
+                        case 4:
+                            FlyMovementHard();
+                            break;
+
+                        case 5:
+                            FlyMovementHard();
+                            break;
+
+                        case 6:
+                            FlyMovementHard();
+                            break;
+
+                        case 7:
+                            FlyMovementHard();
+                            break;
+
+                        case 8:
+                            flyCanMove = false;
+                            break;
+
+                        default:
+                            break;
+
+                    }
+
+                }
+
+            }
+
+            void FlyMovement()
+            {
+                tempVelocity = Vector3.Distance(transform.position, jamToGoPoints[countOfJam].transform.position) / ((10* timeSpeedMultiply) / bpm); //calcul the speed of the fly by dividing the distance between the fly and the next point by the time with the bpm
+                flyCanMove = true;
+
+                //turn the sprite in the direction of the new jam stain when she move
+                Vector3 dir = jamToGoPoints[countOfJam].transform.position - transform.position;
+                Quaternion toQuaternion = Quaternion.FromToRotation(Vector3.right, dir);
+                transform.rotation = Quaternion.Slerp(transform.rotation, toQuaternion, 1000 * Time.deltaTime);
+            }
+
+            void IncreaseFlyJamCount()
+            {
+                countOfJam++;
+                flyCanMove = false;
+            }
+
+            void FlyMovementHard()
+            {
+                flyCanMove = true;
+                countOfJam++;
+
+                //the fly make an another turn of the jam stain list
+                if (countOfJam >= 3)
+                {
+                    countOfJam = 0;
+                }
+
+                tempVelocity = Vector3.Distance(transform.position, jamToGoPoints[countOfJam].transform.position) / ((10* timeSpeedMultiply) / bpm); //calcul the speed of the fly by dividing the distance between the fly and the next point by the time with the bpm (2x speed)
+
+                //turn the sprite in the direction of the new jam stain when she move
+                Vector3 dir = jamToGoPoints[countOfJam].transform.position - transform.position;
+                Quaternion toQuaternion = Quaternion.FromToRotation(Vector3.right, dir);
+                transform.rotation = Quaternion.Slerp(transform.rotation, toQuaternion, 1000 * Time.deltaTime);
             }
         }
+       
     }
 }
