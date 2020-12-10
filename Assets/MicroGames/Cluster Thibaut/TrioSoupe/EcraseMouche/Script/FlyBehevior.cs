@@ -73,10 +73,11 @@ namespace Soupe
 
             public void Update()
             {
-                if (flyCanMove)
+                if (flyCanMove && !SwatterBehevior.flyIsDead)
                 {
                     //movement with sin 
                     transform.position = Vector3.MoveTowards(transform.position, jamToGoPoints[countOfJam].transform.position, tempVelocity * Time.deltaTime) + transform.up * Mathf.Sin(Time.time * 20) * 0.02f;
+                    //sound of fly when moving
                 }
             }
 
@@ -195,10 +196,14 @@ namespace Soupe
                 tempVelocity = Vector3.Distance(transform.position, jamToGoPoints[countOfJam].transform.position) / ((10* timeSpeedMultiply) / bpm); //calcul the speed of the fly by dividing the distance between the fly and the next point by the time with the bpm
                 flyCanMove = true;
 
-                //turn the sprite in the direction of the new jam stain when she move
-                Vector3 dir = jamToGoPoints[countOfJam].transform.position - transform.position;
-                Quaternion toQuaternion = Quaternion.FromToRotation(Vector3.right, dir);
-                transform.rotation = Quaternion.Slerp(transform.rotation, toQuaternion, 1000 * Time.deltaTime);
+                if (!SwatterBehevior.flyIsDead)
+                {
+                    //turn the sprite in the direction of the new jam stain when she move
+                    Vector3 dir = jamToGoPoints[countOfJam].transform.position - transform.position;
+                    Quaternion toQuaternion = Quaternion.FromToRotation(Vector3.right, dir);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, toQuaternion, 1000 * Time.deltaTime);
+                }
+
             }
 
             void IncreaseFlyJamCount()
@@ -220,10 +225,14 @@ namespace Soupe
 
                 tempVelocity = Vector3.Distance(transform.position, jamToGoPoints[countOfJam].transform.position) / ((10* timeSpeedMultiply) / bpm); //calcul the speed of the fly by dividing the distance between the fly and the next point by the time with the bpm (2x speed)
 
-                //turn the sprite in the direction of the new jam stain when she move
-                Vector3 dir = jamToGoPoints[countOfJam].transform.position - transform.position;
-                Quaternion toQuaternion = Quaternion.FromToRotation(Vector3.right, dir);
-                transform.rotation = Quaternion.Slerp(transform.rotation, toQuaternion, 1000 * Time.deltaTime);
+                if (!SwatterBehevior.flyIsDead)
+                {
+                    //turn the sprite in the direction of the new jam stain when she move
+                    Vector3 dir = jamToGoPoints[countOfJam].transform.position - transform.position;
+                    Quaternion toQuaternion = Quaternion.FromToRotation(Vector3.right, dir);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, toQuaternion, 1000 * Time.deltaTime);
+                }
+
             }
         }
        

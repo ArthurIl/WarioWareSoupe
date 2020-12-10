@@ -1,7 +1,19 @@
 fileFormatVersion: 2
-guid: 57376a7586629634ab96177dd035cca6
+guid: e113f3629d49bd04489d62431afb362e
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -4021264804080514814
+    second: Boutons1_0
+  - first:
+      213: -3965058891148189051
+    second: Boutons1_1
+  - first:
+      213: -8703789225189123531
+    second: Boutons1_2
+  - first:
+      213: 5875380721772405317
+    second: Boutons1_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -40,13 +52,13 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 0
-  spritePivot: {x: 0.5, y: 0.5}
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.375}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteBorder: {x: 1796, y: 610, z: 1796, w: 1200}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -121,7 +133,91 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Boutons1_0
+      rect:
+        serializedVersion: 2
+        x: 1358
+        y: 920
+        width: 356
+        height: 410
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 209000d57f89138c0800000000000000
+      internalID: -4021264804080514814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boutons1_1
+      rect:
+        serializedVersion: 2
+        x: 1822
+        y: 1226
+        width: 356
+        height: 410
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 582ab9f32f749f8c0800000000000000
+      internalID: -3965058891148189051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boutons1_2
+      rect:
+        serializedVersion: 2
+        x: 2285
+        y: 920
+        width: 356
+        height: 410
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53adab870dde53780800000000000000
+      internalID: -8703789225189123531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boutons1_3
+      rect:
+        serializedVersion: 2
+        x: 1822
+        y: 624
+        width: 356
+        height: 410
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5422c6923ab898150800000000000000
+      internalID: 5875380721772405317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
