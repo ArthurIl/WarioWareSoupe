@@ -39,6 +39,9 @@ namespace Testing {
         public GameObject verbePanel;
         public TextMeshProUGUI verbeText;
         public GameObject sceneCam;
+        public bool hasLoaded;
+        public double currentTime;
+
         #endregion
 
         #region Methods
@@ -50,6 +53,8 @@ namespace Testing {
             yield return new WaitForSeconds(2f);
             sceneCam.SetActive(false);
             verbePanel.SetActive(false);
+            currentTime = AudioSettings.dspTime;
+            hasLoaded = true;
             _scene.allowSceneActivation = true;
         }
 

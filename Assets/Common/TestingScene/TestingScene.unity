@@ -466,6 +466,8 @@ MonoBehaviour:
   verbePanel: {fileID: 967534524}
   verbeText: {fileID: 578110618}
   sceneCam: {fileID: 728160736}
+  hasLoaded: 0
+  currentTime: 0
 --- !u!4 &572195785
 Transform:
   m_ObjectHideFlags: 0
