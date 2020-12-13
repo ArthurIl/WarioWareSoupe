@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Testing;
 
 namespace Soupe
 {
@@ -9,6 +10,7 @@ namespace Soupe
     {
         public class Script_Deterragetresor : TimedBehaviour
         {
+
             public Transform LeftShovel;    //Declatarion des pelles
             public Transform TopShovel;
             public Transform RightShovel;
@@ -22,6 +24,11 @@ namespace Soupe
             public GameObject RustyChest;
             public GameObject IronChest;
             public GameObject GoldenChest;
+
+            public GameObject Halo;
+
+            bool gameEnd;
+            bool gameWin;
             
 
             public int difficulty;          //Variable temporaire qui va gérer la difficulte
@@ -67,30 +74,39 @@ namespace Soupe
             {
                 if (Tick == 8)
                 {
-                    //la game est loose
+                    if (gameWin)
+                    {
+                        Manager.Instance.Result(true);
+                    }
+                    else
+                    {
+                        Manager.Instance.Result(false);
+                    }
+                    gameEnd = true;
                 }
+
             }
 
             private void Update()
             {
                 //Check si le joueur appuie sur le bon Input
 
-                if ((Input.GetButtonDown("A_Button") || Input.GetKeyDown(KeyCode.DownArrow)) && inputCurrent[inputToPush] == "A")   //
+                if ((Input.GetButtonDown("A_Button") || Input.GetKeyDown(KeyCode.DownArrow)) && inputCurrent[inputToPush] == "A" && !gameEnd)   //
                 {
                     StartCoroutine(BottomShovelAnim()); //Lance l'animation de la pelle associée à l'input A
                     NextInput();    //Le joueur devra appuier sur la pelle suivante
                 }
-                if ((Input.GetButtonDown("B_Button") || Input.GetKeyDown(KeyCode.RightArrow)) && inputCurrent[inputToPush] == "B")
+                if ((Input.GetButtonDown("B_Button") || Input.GetKeyDown(KeyCode.RightArrow)) && inputCurrent[inputToPush] == "B" && !gameEnd)
                 {
                     StartCoroutine(RightShovelAnim());
                     NextInput();
                 }
-                if ((Input.GetButtonDown("X_Button") || Input.GetKeyDown(KeyCode.LeftArrow)) && inputCurrent[inputToPush] == "X")
+                if ((Input.GetButtonDown("X_Button") || Input.GetKeyDown(KeyCode.LeftArrow)) && inputCurrent[inputToPush] == "X" && !gameEnd)
                 {
                     StartCoroutine(LeftShovelAnim());
                     NextInput();
                 }
-                if ((Input.GetButtonDown("Y_Button") || Input.GetKeyDown(KeyCode.UpArrow)) && inputCurrent[inputToPush] == "Y")
+                if ((Input.GetButtonDown("Y_Button") || Input.GetKeyDown(KeyCode.UpArrow)) && inputCurrent[inputToPush] == "Y" && !gameEnd)
                 {
                     StartCoroutine(TopShovelAnim());
                     NextInput();
@@ -98,6 +114,7 @@ namespace Soupe
 
                 if (mustAppear)
                 {
+                    
                     time += Time.deltaTime;
 
                     if (time >= timeBeforeInputAppears)
@@ -106,6 +123,12 @@ namespace Soupe
                         time = 0f;
                         InputSigns[inputToPush].SetActive(true);    //Active la signalisation de l'input sur lequel le joueur doit appuier
                     }
+                }
+
+                if (gameEnd && (mustAppear || InputSigns[inputToPush].activeSelf))
+                {
+                    mustAppear = false;
+                    InputSigns[inputToPush].SetActive(false);
                 }
             }
 
@@ -129,7 +152,7 @@ namespace Soupe
 
                 mustAppear = true;
 
-                if(Chest.position.y < yMaxChestPos)
+                if(Chest.position.y < yMaxChestPos && !gameEnd)
                     Chest.DOMoveY((Chest.position.y + ((yMaxChestPos - yBaseChestPos) / (float)inputNumberToReach)), 0.1f); //Fait monter le coffre
 
                 currentInputNumber += 1;    //Le joueur a appuié une fois de plus
@@ -137,7 +160,10 @@ namespace Soupe
 
                 if (currentInputNumber == inputNumberToReach)   //Check la victoire
                 {
-                    //la game est gagnée
+                    gameEnd = true;
+                    gameWin = true;
+                    StartCoroutine(WinAnim());
+                    
                 }   
             }
 
@@ -173,18 +199,44 @@ namespace Soupe
                 yBaseChestPos = Chest.position.y;
 
 
-                /*switch(difficulty)
+                switch(currentDifficulty)
                 {
-                    case 1:
-                        //il se passe des trucs
-                        break;
-                    case 2:
+                    case Manager.Difficulty.EASY:
+
+                        TopShovel.gameObject.SetActive(false);
+                        LeftShovel.gameObject.SetActive(false);
+
+                        inputCurrent = new string[2] { "B", "A" };
+
+                        Chest = RustyChest.transform;
+                        RustyChest.SetActive(true);
 
                         break;
+
+                    case Manager.Difficulty.MEDIUM:
+
+                        TopShovel.gameObject.SetActive(false);
+
+                        inputCurrent = new string[3] { "B", "A", "X" };
+
+                        Chest = IronChest.transform;
+                        IronChest.SetActive(true);
+
+                        break;
+
+                    case Manager.Difficulty.HARD:
+
+                        inputCurrent = new string[4] { "B", "A", "X", "Y" };
+
+                        Chest = GoldenChest.transform;
+                        GoldenChest.SetActive(true);
+
+                        break;
+
                     default:
-                        Debug.Log("");
-                            break;
-                }*/
+                        Debug.LogError("Difficulty not set");
+                        break;
+                }
             }
 
             //Fonctions d'animation des pelles
@@ -232,6 +284,18 @@ namespace Soupe
                 LeftShovel.DOScale(new Vector3(1f, 1f, 1f), 0.1f);
                 LeftShovel.DORotate(new Vector3(0, 0, 0), 0.1f);
                 LeftShovel.DOMoveX(-10.24f, 0.2f);
+            }
+
+            IEnumerator WinAnim()
+            {
+                Chest.DOMoveY(0f, 0.2f);
+                Chest.DORotate(new Vector3(0f, 0f, 360f), 0.2f, RotateMode.FastBeyond360);
+                Chest.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 10;
+                yield return new WaitForSeconds(0.2f);
+                Halo.SetActive(true);
+                Halo.transform.DOScale(new Vector3(1, 1, 1), 0.1f);
+                Halo.transform.DORotate(new Vector3(0, 0, 720f), 8f, RotateMode.FastBeyond360);
+
             }
         }
     }
