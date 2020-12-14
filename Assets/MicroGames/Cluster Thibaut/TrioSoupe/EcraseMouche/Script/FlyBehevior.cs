@@ -43,17 +43,17 @@ namespace Soupe
 
                 switch (currentDifficulty)
                 {
-                    case Manager.Difficulty.EASY:
+                    case Difficulty.EASY:
                         difficulty = 1;
                         timeSpeedMultiply = 6;
                         break;
 
-                    case Manager.Difficulty.MEDIUM:
+                    case Difficulty.MEDIUM:
                         difficulty = 2;
                         timeSpeedMultiply = 4;
                         break;
 
-                    case Manager.Difficulty.HARD:
+                    case Difficulty.HARD:
                         difficulty = 3;
                         timeSpeedMultiply = 2;
                         break;

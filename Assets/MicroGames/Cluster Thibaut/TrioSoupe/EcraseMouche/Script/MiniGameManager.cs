@@ -35,15 +35,15 @@ namespace Soupe
 
                 switch (currentDifficulty)
                 {
-                    case Manager.Difficulty.EASY:
+                    case Difficulty.EASY:
                         numberOfJam = 3;
                         break;
 
-                    case Manager.Difficulty.MEDIUM:
+                    case Difficulty.MEDIUM:
                         numberOfJam = 4;
                         break;
 
-                    case Manager.Difficulty.HARD:
+                    case Difficulty.HARD:
                         numberOfJam = 4;
                         break;
 
