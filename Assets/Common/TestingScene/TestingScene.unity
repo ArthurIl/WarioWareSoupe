@@ -460,13 +460,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idCard: {fileID: 11400000, guid: cd910fc9f5e19e74fb52451584372b4e, type: 2}
   bpm: 140
-  currentDifficulty: 0
+  currentDifficulty: 2
   panel: {fileID: 137554992}
   resultText: {fileID: 224949527}
   verbePanel: {fileID: 967534524}
   verbeText: {fileID: 578110618}
   inputImage: {fileID: 584005319}
   sceneCam: {fileID: 728160736}
+  isLoaded: 0
 --- !u!4 &572195785
 Transform:
   m_ObjectHideFlags: 0
