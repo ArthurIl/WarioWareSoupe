@@ -79,6 +79,10 @@ namespace Soupe
                     transform.position = Vector3.MoveTowards(transform.position, jamToGoPoints[countOfJam].transform.position, tempVelocity * Time.deltaTime) + transform.up * Mathf.Sin(Time.time * 20) * 0.02f;
                     //sound of fly when moving
                 }
+                else
+                {
+                    SoundManagerMouche.Instance.sfxSound[0].Stop();
+                }
             }
 
             //TimedUpdate is called once every tick.
@@ -195,6 +199,7 @@ namespace Soupe
             {
                 tempVelocity = Vector3.Distance(transform.position, jamToGoPoints[countOfJam].transform.position) / ((10* timeSpeedMultiply) / bpm); //calcul the speed of the fly by dividing the distance between the fly and the next point by the time with the bpm
                 flyCanMove = true;
+                SoundManagerMouche.Instance.sfxSound[0].Play();
 
                 if (!SwatterBehevior.flyIsDead)
                 {
@@ -215,6 +220,7 @@ namespace Soupe
             void FlyMovementHard()
             {
                 flyCanMove = true;
+                SoundManagerMouche.Instance.sfxSound[0].Play();
                 countOfJam++;
 
                 //the fly make an another turn of the jam stain list
