@@ -33,6 +33,8 @@ namespace Soupe
             {
                 base.Start(); //Do not erase this line!
 
+                SoundManagerMouche.Instance.globalMusic.Play();
+
                 switch (currentDifficulty)
                 {
                     case Difficulty.EASY:

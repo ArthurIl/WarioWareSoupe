@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MicroGames/Cluster Thibaut/TrioSoupe/EcraseMouche/EcraseMouche.unity
     guid: aa16d15e49f3acc45a5544741765399e
+  - enabled: 1
+    path: Assets/MicroGames/Cluster Theodore/TrioLeRafiot/Choppe_02/Choppe2Scene.unity
+    guid: 10c7c78062ee58540b288431812e4126
   m_configObjects: {}

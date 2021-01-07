@@ -39,18 +39,22 @@ using DG.Tweening;
                 //if the fly is under the swatter press a button and slam
                 if (Input.GetButtonDown("A_Button") && canSmash)
                 {
-
                     StartCoroutine(SwatterAnimation());
+                    SoundManagerMouche.Instance.sfxSound[1].Play();
+
                     if (flyIsUnder)
                     {
                         //sound when swatter hit the fly
+                        SoundManagerMouche.Instance.sfxSound[2].Play();
                         Instantiate(flySmashed, flyObject.transform);
                         flyIsDead = true; //success condition
                         flyObject.GetComponent<SpriteRenderer>().enabled = false;
+                        canSmash = false;
                     }
                     else
                     {
                         //sound when swatter hit the jam
+                        SoundManagerMouche.Instance.sfxSound[3].Play();
                         sprite.sortingOrder = 2; //the fly sprite is above the swatter 
                         canSmash = false; //if the player don't time the smash right he can't smash again
                     }
@@ -60,7 +64,10 @@ using DG.Tweening;
 
             void OnTriggerEnter2D(Collider2D col) //the fly is under the swatter
             {
-                buttonA.SetActive(true);
+                if (canSmash)
+                {
+                    buttonA.SetActive(true);
+                }
                 flyIsUnder = true;
                 flyObject = col.gameObject;
             }
