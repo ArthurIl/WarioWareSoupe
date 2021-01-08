@@ -30,10 +30,8 @@ namespace TrioSoupe
             public GameObject looseScreen;
 
             public GameObject sadFace;
-            public GameObject neutralFace;
             public GameObject HappyFace;
             public GameObject sadFaceD0;
-            public GameObject neutralFaceD0;
             public GameObject HappyFaceD0;
 
             GameObject chefBread;
@@ -85,14 +83,6 @@ namespace TrioSoupe
                 ingredientChosingPhase = new GameObject[4];
                 launchPlaceRandomIngredient = true;
                 memorizationOver = false;
-                if(difficulty == 0)
-                {
-                    neutralFaceD0.SetActive(true);
-                }
-                else
-                {
-                    neutralFace.SetActive(true);
-                }
                 if (difficulty < 2)
                 {
                     chefMeatInt = Random.Range(0, 3);
@@ -207,8 +197,6 @@ namespace TrioSoupe
                     Destroy(chefVegetable);
                 }
                 Destroy(chefBreadBase);
-                neutralFace.SetActive(false);
-                neutralFaceD0.SetActive(false);
                 RandomPlaceIngredient(bread);
                 memoryBackground.SetActive(false);
                 currentSelectionBackGround = Instantiate(selectionBackground, Vector3.zero, Quaternion.identity);
