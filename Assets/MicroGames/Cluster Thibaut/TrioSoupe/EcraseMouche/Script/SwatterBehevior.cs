@@ -42,14 +42,16 @@ using DG.Tweening;
                     StartCoroutine(SwatterAnimation());
                     SoundManagerMouche.Instance.sfxSound[1].Play();
 
-                    if (flyIsUnder)
+                    if (flyIsUnder || flyIsDead)
                     {
                         //sound when swatter hit the fly
                         SoundManagerMouche.Instance.sfxSound[2].Play();
-                        Instantiate(flySmashed, flyObject.transform);
-                        flyIsDead = true; //success condition
-                        flyObject.GetComponent<SpriteRenderer>().enabled = false;
-                        canSmash = false;
+                        if (!flyIsDead)
+                        {
+                            Instantiate(flySmashed, flyObject.transform);
+                            flyIsDead = true; //success condition
+                            flyObject.GetComponent<SpriteRenderer>().enabled = false;
+                        }
                     }
                     else
                     {
