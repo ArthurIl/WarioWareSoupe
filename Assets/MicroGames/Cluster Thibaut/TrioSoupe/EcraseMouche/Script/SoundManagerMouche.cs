@@ -17,7 +17,7 @@ namespace Soupe
 
             private void Awake()
             {
-                CreateSingleton(true);
+                CreateSingleton();
             }
 
         }
