@@ -31,7 +31,7 @@ namespace Soupe
                 flyCanMove = false;
                 countOfJam = 0;
 
-                jamToGoPoints = MiniGameManager.jamCopy; //copie of the jam list for the movement
+                jamToGoPoints = MiniGameManager.jam; //copie of the jam list for the movement
 
                 for (int i = 0; i < jamToGoPoints.Count; i++) //remove from the list the jam under the fly
                 {

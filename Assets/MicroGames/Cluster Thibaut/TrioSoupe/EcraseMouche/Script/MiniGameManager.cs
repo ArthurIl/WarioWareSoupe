@@ -12,10 +12,7 @@ namespace Soupe
         /// </summary>
         public class MiniGameManager : TimedBehaviour
         {
-            [SerializeField]
-            private List<GameObject> jam = new List<GameObject>();
-            [SerializeField]
-            public static List<GameObject> jamCopy = new List<GameObject>();
+            public static List<GameObject> jam = new List<GameObject>();
             [SerializeField]
             private List<GameObject> spawnPoint = new List<GameObject>();
             [SerializeField]
@@ -37,8 +34,8 @@ namespace Soupe
                 base.Start(); //Do not erase this line!
 
                 SoundManagerMouche.Instance.globalMusic.Play();
-                
-                jamCopy = jam;
+
+                jam.Clear();
 
                 switch (currentDifficulty)
                 {
