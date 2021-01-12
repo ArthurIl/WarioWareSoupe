@@ -177,9 +177,19 @@ namespace Soupe
 
                 if (currentInputNumber == inputNumberToReach)   //Check la victoire
                 {
-                    gameEnd = true;
-                    gameWin = true;
-                    StartCoroutine(WinAnim());
+                    if (Tick == 7 && timer > (60 / bpm)*0.5)
+                    {
+                        StartCoroutine(FastWin());
+                        gameEnd = true;
+                        gameWin = true;
+                    }
+                    else
+                    {
+                        gameEnd = true;
+                        gameWin = true;
+                        StartCoroutine(WinAnim());
+                    }
+                    
                     
                 }   
             }
@@ -348,6 +358,12 @@ namespace Soupe
                 Halo.transform.DOScale(new Vector3(1, 1, 1), 0.1f);
                 Halo.transform.DORotate(new Vector3(0, 0, 720f), 8f, RotateMode.FastBeyond360);
 
+            }
+
+            IEnumerator FastWin()
+            {
+                Debug.Log("FastWin");
+                yield return null;
             }
         }
     }
