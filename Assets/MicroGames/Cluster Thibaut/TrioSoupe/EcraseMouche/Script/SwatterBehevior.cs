@@ -40,7 +40,7 @@ using DG.Tweening;
                 if (Input.GetButtonDown("A_Button") && canSmash)
                 {
                     StartCoroutine(SwatterAnimation());
-                    SoundManagerMouche.Instance.sfxSound[4].Play();
+                   //SoundManagerMouche.Instance.sfxSound[3].Play();
                     if (flyIsUnder || flyIsDead)
                     {
                         //sound when swatter hit the fly
